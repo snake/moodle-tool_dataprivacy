@@ -90,5 +90,40 @@
         <KEY NAME="purposeid" TYPE="foreign" FIELDS="purposeid" REFTABLE="tool_dataprivacy_purpose" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="tool_dataprivacy_md_cmpt" COMMENT="Represents a Moodle component for which privacy metadata is stored.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="component" TYPE="char" LENGTH="1333" NOTNULL="true" SEQUENCE="false" COMMENT="The frankenstyle component name."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The id primary key"/>
+        <KEY NAME="component" TYPE="unique" FIELDS="component" COMMENT="Must be a unique component name."/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="tool_dataprivacy_md_item" COMMENT="A metadata item for a component">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="1333" NOTNULL="true" SEQUENCE="false" COMMENT="String name of the item"/>
+        <FIELD NAME="type" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="The type of metadata item, based on enum type."/>
+        <FIELD NAME="summary" TYPE="char" LENGTH="1333" NOTNULL="false" SEQUENCE="false" COMMENT="Lang string identifier for the metadata item summary"/>
+        <FIELD NAME="md_cmpt_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Reference to the metadata component owner of this md_item"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="md_cmpt_id" TYPE="foreign" FIELDS="md_cmpt_id" REFTABLE="tool_dataprivacy_md_cmpt" REFFIELDS="id" COMMENT="Reference to the metadata component"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="tool_dataprivacy_md_fieldmap" COMMENT="Key value store for fields belonging to metadata items.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="key" TYPE="char" LENGTH="1333" NOTNULL="true" SEQUENCE="false" COMMENT="String key"/>
+        <FIELD NAME="value" TYPE="char" LENGTH="1333" NOTNULL="true" SEQUENCE="false" COMMENT="String value"/>
+        <FIELD NAME="md_item_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Reference to the owning metadata item."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="md_item_id" TYPE="foreign" FIELDS="md_item_id" REFTABLE="tool_dataprivacy_md_item" REFFIELDS="id" COMMENT="Reference to the metadata item owner."/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>

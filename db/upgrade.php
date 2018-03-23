@@ -159,5 +159,64 @@ function xmldb_tool_dataprivacy_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018021813, 'tool', 'dataprivacy');
     }
 
+    if ($oldversion < 2018031901) {
+
+        // Define table tool_dataprivacy_md_cmpt to be created.
+        $table = new xmldb_table('tool_dataprivacy_md_cmpt');
+
+        // Adding fields to table tool_dataprivacy_md_cmpt.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '1333', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table tool_dataprivacy_md_cmpt.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('component', XMLDB_KEY_UNIQUE, array('component'));
+
+        // Conditionally launch create table for tool_dataprivacy_md_cmpt.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table tool_dataprivacy_md_item to be created.
+        $table = new xmldb_table('tool_dataprivacy_md_item');
+
+        // Adding fields to table tool_dataprivacy_md_item.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '1333', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('type', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('summary', XMLDB_TYPE_CHAR, '1333', null, null, null, null);
+        $table->add_field('md_cmpt_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table tool_dataprivacy_md_item.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('md_cmpt_id', XMLDB_KEY_FOREIGN, array('md_cmpt_id'), 'tool_dataprivacy_md_cmpt', array('id'));
+
+        // Conditionally launch create table for tool_dataprivacy_md_item.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table tool_dataprivacy_md_fieldmap to be created.
+        $table = new xmldb_table('tool_dataprivacy_md_fieldmap');
+
+        // Adding fields to table tool_dataprivacy_md_fieldmap.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('key', XMLDB_TYPE_CHAR, '1333', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('value', XMLDB_TYPE_CHAR, '1333', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('md_item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table tool_dataprivacy_md_fieldmap.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('md_item_id', XMLDB_KEY_FOREIGN, array('md_item_id'), 'tool_dataprivacy_md_item', array('id'));
+
+        // Conditionally launch create table for tool_dataprivacy_md_fieldmap.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Dataprivacy savepoint reached.
+        upgrade_plugin_savepoint(true, 2018031901, 'tool', 'dataprivacy');
+    }
+
     return true;
 }
